@@ -16,7 +16,7 @@ https://medium.com/@patrick.yoho11/installing-selenium-and-chromedriver-on-windo
 config.json (Example):
 ```yaml
 {
-"TOKEN": "1",
+"TOKEN": "1", // ТОКЕН КОШЕЛЬКА
  "BOT_TOKEN": "ТОКЕН", // ПОЛУЧАЕТСЯ У BOT_FATHER
  "MINIMUM_BALANCE": 1000000, // МИНИМАЛЬНЫЙ БАЛАНС ДЛЯ ПАРСИНГА
  "LOGIN": "ЛОГИН ОТ АККАУНТА", // ЛОГИН ОТ АККАУНТА
