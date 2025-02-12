@@ -1,8 +1,9 @@
 import logging
 import asyncio
-from start_driver import init, authorize
+from start_driver import Slave
 from parser.main import start_cycle
 from telegram.main import start_bot_polling
+from selenium import webdriver
 import json
 
 logging.basicConfig(
@@ -11,34 +12,18 @@ logging.basicConfig(
 )
 
 async def main():
-    # Инициализация драйвера с повторными попытками
-    while True:
-        try:
-            driver = init()
-            break
-        except Exception as e:
-            logging.error(f"Error while initializing driver: {e}")
-            await asyncio.sleep(1)
-    logging.info("Driver initialized successfully")
-
+    logging.info("Starting selenium server")
+    driver = Slave()
+    logging.info("Started successfully")
     # Загрузка конфигурации
     with open("config.json") as config:
         config_data = json.load(config)
     minimum_balance = config_data["MINIMUM_BALANCE"]
 
-    # Запускаем бота как фоновую задачу, чтобы он не блокировал выполнение:
-    bot_task = asyncio.create_task(start_bot_polling())
-    logging.info("Bot polling started in background")
-
-    # Если необходимо, можно подождать немного, чтобы бот успел инициализироваться:
-    await asyncio.sleep(1)
-
-    # Выполняем авторизацию (после запуска бота)
-    await authorize(driver)
-    logging.info("Authorization completed")
+    bot_task = asyncio.create_task(start_bot_polling(driver))
 
     # Затем запускаем цикл
-    await start_cycle(minimum_balance, driver)
+    await asyncio.gather(bot_task)
 
 if __name__ == '__main__':
     asyncio.run(main())

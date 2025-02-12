@@ -2,9 +2,12 @@ from aiogram import Bot, Dispatcher, F, Router
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-import asyncio
+from aiogram.filters import Command
+from start_driver import Slave
 import logging
 import json
+
+driver = Slave()
 
 logging.basicConfig(
     level=logging.INFO,
@@ -79,14 +82,11 @@ async def minimum_balance_handler(message: Message, state: FSMContext):
 
     await message.answer("Минимальный баланс успешно определен.")
     await state.clear()
-
-async def ask_auth_token():
-    await bot.send_message(5719110839, "Введите код аутентификации. (/auth КОД) в течение 5 секунд")
-
-@dp.message(F.text=="/auth")
-async def get_auth_token_handler(message: Message, state: FSMContext):
+@dp.message(Command("auth"))
+async def get_auth_token_handler(message: Message):
     try:
         auth_token = message.text.split()[1]
+        message.answer("auth_token: {auth_token}")
     except IndexError:
         await message.answer("Необходимо ввести код аутентификации.")
         return
@@ -97,7 +97,20 @@ async def get_auth_token_handler(message: Message, state: FSMContext):
             json.dump(config_data, config)
     await message.answer("Код аутентификации успешно введен.")
     
+    try:
+        await driver.authorize()
+    except Exception as e:
+        await message.answer(f"Ошибка авторизации: {e}")
+    
+@dp.message(Command("confirm"))
+async def confirm_handler(message: Message):
+    try:
+        await driver.confirm()
+        await message.answer("Данные для парсера обновлены")
+    except Exception as e:
+        await message.answer(f"Ошибка: {e}")
 
-async def start_bot_polling():
-    pass
+async def start_bot_polling(Driver: Slave):
+    global driver
+    driver = Driver
     await dp.start_polling(bot)

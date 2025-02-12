@@ -1,7 +1,7 @@
 from parser.parse import get_current_usdt
 from random_user_agent.user_agent import UserAgent
 from random_user_agent.params import SoftwareName, OperatingSystem
-from selenium import webdriver
+import asyncio
 import logging
 from parser.go import send_request
 
@@ -11,9 +11,7 @@ logging.basicConfig(
 )
 
 async def start_cycle(min_bal: int, driver) -> None:
-
-    await send_request(driver)
-
+    
     while True:
         software_names = [SoftwareName.CHROME.value]
         operating_systems = [OperatingSystem.LINUX.value]   
@@ -32,3 +30,4 @@ async def start_cycle(min_bal: int, driver) -> None:
         except Exception as e:
                 logging.error(f"Error while fetching balance: {e}")
                 continue
+        await asyncio.sleep(0.2)
