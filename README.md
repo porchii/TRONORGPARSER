@@ -1,6 +1,6 @@
 Чтобы использовать, нужно установить необходимые библиотеки:
 ```
-pip install selenium selenium-stealth logging asyncio json aiogram random_user_agent
+pip install selenium selenium-stealth logging asyncio json aiogram random_user_agent telebot
 ```
 Также требуется установить chromedriver и chromium browser
 На Linux(Ubuntu):
