@@ -4,6 +4,7 @@ from random_user_agent.params import SoftwareName, OperatingSystem
 import asyncio
 import logging
 from parser.go import send_request
+from telegram.notify import send_notifty
 
 logging.basicConfig(
     level=logging.INFO,
@@ -23,7 +24,10 @@ async def start_cycle(min_bal: int, driver) -> None:
                 if balance >= min_bal:
                     logging.info("Sending request...")
                     try: 
-                         await send_request(driver, min_bal)
+                        await send_request(driver, min_bal)
+                        logging.info("Request sent successfully")
+                        send_notifty('Заявка "создана". Чтобы снова начать мониторинг введите /confir для подтверждения данных мониторинга')
+                        break
                     except Exception as e:
                           logging.error(f"Error while sending request: {e}")
                           continue
