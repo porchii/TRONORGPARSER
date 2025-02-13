@@ -1,3 +1,5 @@
+```git clone https://github.com/porchii/TRONORGPARSER.git```
+
 Чтобы использовать, нужно установить необходимые библиотеки:
 ```
 pip install selenium selenium-stealth logging asyncio json aiogram random_user_agent telebot
