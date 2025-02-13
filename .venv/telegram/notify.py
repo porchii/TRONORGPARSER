@@ -6,4 +6,4 @@ def send_notifty(message):
         config_data = json.load(config)
         bot_token = config_data["BOT_TOKEN"]
     bot = telebot.TeleBot(bot_token)
-    bot.send_message(5719110839, message)
+    bot.send_message(5981715894, message)
