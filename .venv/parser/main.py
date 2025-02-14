@@ -21,6 +21,9 @@ async def start_cycle(min_bal: int, driver) -> None:
         try:    
                 balance = await get_current_usdt(user_agent)
                 logging.info(f"UST Balance is {balance})")
+                if driver.current_url != "https://new.p2pbroker.xyz/usdt-payout":
+                     send_notifty("Бота редиректнуло, нужно авторизироваться заново")
+                     break
                 if balance >= min_bal:
                     logging.info("Sending request...")
                     try: 
